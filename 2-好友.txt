@@ -1,0 +1,60 @@
+2,好友+群组
+
+好友协议
+IChatManagerBuddy
+
+手动获得好友列表
+- (void *)asyncFetchBuddyListWithCompletion:(void (^)(NSArray *buddyList, EMError *error))completion
+                                    onQueue:(dispatch_queue_t)queue
+
+//好友对象
+EMBuddy
+
+获得好友列表后,根据用户名字可以直接创建会话
+[EaseMob sharedInstance].chatManager conversationForChatter:conversationChatter conversationType:conversationType];
+
+
+群组-协议
+IChatManagerGroup
+
+//创建群组
+//群组设置
+EMGroupStyleSetting *setting = [[EMGroupStyleSetting alloc] init];
+//群组最大人数
+setting.groupMaxUsersCount = maxUsersCount;
+//群组类型
+ eGroupStyle_PrivateOnlyOwnerInvite 私有群组，只能owner权限的人邀请人加入
+ eGroupStyle_PrivateMemberCanInvite 私有群组，owner和member权限的人可以邀请人加入
+ eGroupStyle_PublicJoinNeedApproval 公开群组，允许非群组成员申请加入，需要管理员同意才能真正加入该群组
+ eGroupStyle_PublicOpenJoin         公开群组，允许非群组成员加入，不需要管理员同意
+ eGroupStyle_PublicAnonymous        公开匿名群组，允许非群组成员加入，不需要管理员同意
+setting.groupStyle = eGroupStyle_PrivateMemberCanInvite;
+
+
+ @param subject        群组名称
+ @param description    群组描述
+ @param invitees       默认群组成员（usernames，不需要包含创建者username）
+ @param welcomeMessage 群组欢迎语
+ @param styleSetting   群组属性配置
+ @param completion     创建完成后的回调
+ @param aQueue         回调block时的线程
+创建群组
+- (void)asyncCreateGroupWithSubject:(NSString *)subject
+                        description:(NSString *)description
+                           invitees:(NSArray *)invitees
+              initialWelcomeMessage:(NSString *)welcomeMessage
+                       styleSetting:(EMGroupStyleSetting *)styleSetting
+                         completion:(void (^)(EMGroup *group,
+                                              EMError *error))completion
+                            onQueue:(dispatch_queue_t)aQueue;
+
+
+
+//群组列表
+NSArray *rooms = [[EaseMob sharedInstance].chatManager groupList];
+
+对象
+EMGroup
+通过,groupId 和会话的类型 创建会话
+[[EaseMob sharedInstance].chatManager conversationForChatter:conversationChatter conversationType:conversationType];
+
